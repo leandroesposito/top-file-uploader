@@ -13,6 +13,7 @@ const PORT = process.env.PORT || 3000;
 
 const signUpRouter = require("./routes/sign-up");
 const logInRouter = require("./routes/log-in");
+const uploadRouter = require("./routes/upload");
 
 const app = express();
 
@@ -56,6 +57,7 @@ app.use((req, res, next) => {
 
 app.use("/sign-up", signUpRouter);
 app.use("/log-in", logInRouter);
+app.use("/upload", uploadRouter);
 app.use("/", (req, res) => {
   res.render("index.ejs");
 });
