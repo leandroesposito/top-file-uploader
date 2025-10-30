@@ -1,3 +1,3 @@
 <%- include('./partials/upper-body.ejs') %>
-<%= locals.currentUser.username ?? "" %>
+<%= locals.currentUser?.username %>
 <%- include('./partials/lower-body.ejs') %>
