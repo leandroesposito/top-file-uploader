@@ -1,0 +1,9 @@
+<% if (locals.success && success.length > 0) { %>
+  <div class="successes">
+    <% success.forEach(message => { %>
+      <div class="success">
+        <%= message %>
+      </div>
+    <% }) %>
+  </div>
+<% } %>
