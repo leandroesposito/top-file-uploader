@@ -20,7 +20,7 @@ const validateUser = [
   body("username").custom(async (value) => {
     const user = await userDB.getUserByUsername(value);
     if (user) {
-      throw new Error(`${username} is already used.`);
+      throw new Error(`${value} is already used.`);
     }
     return true;
   }),
