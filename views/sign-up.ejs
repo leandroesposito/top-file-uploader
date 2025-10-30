@@ -1,0 +1,17 @@
+<%- include('./partials/upper-body.ejs') %>
+<form action="/sign-up" method="POST">
+  <div class="form-row">
+    <label for="username">Username</label>
+    <input type="text" name="username" id="username" required>
+  </div>
+  <div class="form-row">
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password" required>
+  </div>
+  <div class="form-row">
+    <label for="confirm-password">Confirm Password</label>
+    <input type="password" name="confirm-password" id="confirm-password" required>
+  </div>
+  <button class="button" type="submit">Submit</button>
+</form>
+<%- include('./partials/lower-body.ejs') %>
