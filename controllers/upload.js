@@ -35,7 +35,7 @@ const uploadPost = [
       const newFile = await fileDB.createFile(file, req.user.id);
 
       if (newFile) {
-        req.flash("success", "uploaded");
+        req.flash("success", "File uploaded succesfuly");
         res.redirect("/upload");
       } else {
         req.flash("error", "Error uploading file");
