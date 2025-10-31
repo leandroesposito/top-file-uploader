@@ -34,5 +34,5 @@ model File {
   filename     String
   size         Int
   user         User   @relation(fields: [userId], references: [id])
-  userId       Int    @unique
+  userId       Int
 }
