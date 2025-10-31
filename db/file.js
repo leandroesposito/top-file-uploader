@@ -3,20 +3,16 @@ const { PrismaClient } = require("../generated/prisma");
 const prisma = new PrismaClient();
 
 async function createFile(file, userId) {
-  const user = await prisma.user.update({
-    where: {
-      id: userId,
-    },
+  const newFile = await prisma.file.create({
     data: {
-      files: {
-        create: {
-          originalname: file.originalname,
-          filename: file.filename,
-          size: file.size,
-        },
-      },
+      originalname: file.originalname,
+      filename: file.filename,
+      size: file.size,
+      userId: userId,
     },
   });
+
+  return newFile;
 }
 
 module.exports = {
