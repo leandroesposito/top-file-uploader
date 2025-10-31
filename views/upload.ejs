@@ -1,9 +1,25 @@
 <%- include('./partials/upper-body.ejs') %>
-<form action="/upload" method="POST" enctype="multipart/form-data">
+<form action="/upload" method="POST" enctype="multipart/form-data" class="file-form">
   <div class="form-row">
     <label for="file">File</label>
     <input type="file" name="file" id="file">
   </div>
   <button class="button" type="submit">Submit</button>
 </form>
+<script>
+  const fileForm = document.querySelector(".file-form");
+  const MAX_FILE_MB = 5
+  const MAX_FILE_SIZE = 1024 * 1024 * MAX_FILE_MB;
+  fileForm.addEventListener("submit", (event) => {
+    const fileInput = fileForm.querySelector("#file");
+    const file = fileInput.files[0];
+    const fileSize = file.size;
+    const fileMb = Math.floor(fileSize / 1024 / 1024 * 100) / 100;
+    console.log(fileMb);
+    if (MAX_FILE_SIZE < fileSize){
+      event.preventDefault();
+      alert(`Your file size of ${fileMb}MB exceeds our limit of ${MAX_FILE_MB}MB.`);
+    }
+  })
+</script>
 <%- include('./partials/lower-body.ejs') %>
