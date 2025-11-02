@@ -18,6 +18,9 @@ async function getUserById(id) {
     where: {
       id: id,
     },
+    omit: {
+      password: true,
+    },
   });
 
   return user;
