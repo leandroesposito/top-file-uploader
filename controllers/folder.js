@@ -1,0 +1,73 @@
+const { param, body } = require("express-validator");
+const folderDB = require("../db/folder");
+const validator = require("./validator");
+const authValidator = require("./auth-validator");
+
+const folderValidator = {
+  folderExist: async (value, { req }) => {
+    const folder = await folderDB.getFolderContent(value, req.user.id);
+
+    if (!folder) {
+      throw new Error(`Folder with id ${value} doesn't exist!`);
+    }
+
+    req.locals = { folder };
+    return true;
+  },
+  folderBelongsToUser: async (req, res, next) => {
+    if (req.locals?.folder && req.user.id != req.locals.folder.userId) {
+      throw new Error("You don't have permission to access this folder!");
+    }
+    next();
+  },
+};
+
+const folderGet = [
+  param("id").custom(folderValidator.folderExist),
+  authValidator.isAuthenticated,
+  folderValidator.folderBelongsToUser,
+  validator.checkValidation,
+  async function folderGet(req, res) {
+    if (res.locals.errors) {
+      res.redirect("/folder");
+    }
+    res.locals.folder = req.locals.folder;
+    console.dir(res.locals.folder);
+    res.render("folder.ejs");
+  },
+];
+
+const folderPost = [
+  authValidator.isAuthenticated,
+  body("parentId").custom(folderValidator.folderExist),
+  folderValidator.folderBelongsToUser,
+  validator.checkValidation,
+  async function folderPost(req, res) {
+    if (res.locals.errors) {
+      res.redirect("/folder");
+    }
+
+    const folder = {
+      name: req.body.name,
+      parentId: req.body.parentId,
+    };
+
+    const newFolder = await folderDB.createFolder(
+      folder.name,
+      folder.parentId,
+      req.user.id
+    );
+    if (newFolder) {
+      res.redirect(`/folder/${newFolder.id}`);
+    } else {
+      req.flash("error", "Error creating the folder!");
+      res.redirect("/folder");
+    }
+  },
+];
+
+module.exports = {
+  folderGet,
+  folderPost,
+  folderValidator,
+};
