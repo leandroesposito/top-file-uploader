@@ -29,7 +29,7 @@ const folderGet = [
   validator.checkValidation,
   async function folderGet(req, res) {
     if (res.locals.errors) {
-      res.redirect("/folder");
+      return res.redirect("/folder");
     }
     res.locals.folder = req.locals.folder;
     console.dir(res.locals.folder);
