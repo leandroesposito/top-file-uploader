@@ -14,13 +14,16 @@ async function createFolder(name, parentId, userId) {
   return newFolder;
 }
 
-async function getFolderContent(folderId) {
+async function getFolderContent(folderId, userId) {
+  if (!folderId) {
+    return await getRootContent(userId);
+  }
+
   const folder = await prisma.folder.findUnique({
     where: {
-      parentId: folderId,
+      id: folderId,
     },
     include: {
-      name: true,
       files: {
         orderBy: {
           filename: "asc",
@@ -34,7 +37,35 @@ async function getFolderContent(folderId) {
     },
   });
 
-  return { name: folder.name, files: folder.files, children: folder.children };
+  if (!folder) {
+    return null;
+  }
+
+  return {
+    name: folder.name,
+    userId: folder.userId,
+    files: folder.files,
+    children: folder.children,
+    id: folder.id,
+  };
+}
+
+async function getRootContent(userId) {
+  const children = await prisma.folder.findMany({
+    where: {
+      userId: userId,
+      parentId: null,
+    },
+  });
+
+  const files = await prisma.file.findMany({
+    where: {
+      userId: userId,
+      folderId: null,
+    },
+  });
+
+  return { name: "/", userId, children, files, id: "" };
 }
 
 async function getFolderPath(folderId) {
