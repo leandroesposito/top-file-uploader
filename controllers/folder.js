@@ -60,7 +60,7 @@ const folderPost = [
   validator.checkValidation,
   async function folderPost(req, res) {
     if (res.locals.errors) {
-      res.redirect("/folder");
+      return res.redirect("/folder");
     }
 
     const folder = {
