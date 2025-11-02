@@ -44,6 +44,19 @@ const folderPost = [
   authValidator.isAuthenticated,
   body("parentId").custom(folderValidator.folderExist),
   folderValidator.folderBelongsToUser,
+  body("name")
+    .trim()
+    .isLength({ min: 4, max: 100 })
+    .withMessage("Folder name must be between 4 and 100 characters!")
+    .custom((value, { req }) => {
+      const folder = req.locals.folder.children.find(
+        (child) => child.name === value
+      );
+      if (folder) {
+        throw new Error("You already have a folder with that name!");
+      }
+      return true;
+    }),
   validator.checkValidation,
   async function folderPost(req, res) {
     if (res.locals.errors) {
