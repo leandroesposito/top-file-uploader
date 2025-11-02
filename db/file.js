@@ -9,6 +9,7 @@ async function createFile(file, userId) {
       filename: file.filename,
       size: file.size,
       userId: userId,
+      folderId: file.folderId,
     },
   });
 

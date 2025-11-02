@@ -30,6 +30,7 @@ const uploadPost = [
         originalname: req.file.originalname,
         filename: req.file.filename,
         size: req.file.size,
+        folderId: req.body.folderId || null,
       };
 
       const newFile = await fileDB.createFile(file, req.user.id);
