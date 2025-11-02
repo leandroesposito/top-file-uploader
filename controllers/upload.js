@@ -28,6 +28,11 @@ const uploadPost = [
       return res.redirect("/folder");
     }
     upload(req, res, async function (error) {
+      if (!req.file) {
+        req.flash("error", "You must select a file to upload");
+        return res.redirect(`/folder/${res.locals.folder.id}`);
+      }
+
       if (error) {
         if (error instanceof multer.MulterError) {
           req.flash("error", error.message + " max file size is 5 MB");
