@@ -1,0 +1,7 @@
+<% if (!locals.currentUser) { %>
+ <a href="/log-in" class="button">Log in</a>
+ <a href="/sign-up" class="button">Sign up</a>
+<% } %>
+<% if (locals.currentUser) { %>
+ <a href="/log-out" class="button">Log out</a>
+<% } %>
