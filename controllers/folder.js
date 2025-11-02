@@ -32,8 +32,11 @@ const folderGet = [
       return res.redirect("/folder");
     }
     res.locals.folder = req.locals.folder;
-    console.dir(res.locals.folder);
-    res.render("folder.ejs");
+
+    const path = await folderDB.getFolderPath(res.locals.folder.id);
+    res.locals.path = path;
+
+    res.render("folder.ejs", { title: res.locals.folder.name });
   },
 ];
 
