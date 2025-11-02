@@ -1,0 +1,8 @@
+<form action="/folder" method="POST">
+  <div class="form-row">
+    <label for="name">Name</label>
+    <input type="text" name="name" id="name">
+  </div>
+  <input type="hidden" name="parentId" value="<%= locals.folder ? locals.folder.id : "" %>">
+  <button class="button" type="submit">Submit</button>
+</form>
