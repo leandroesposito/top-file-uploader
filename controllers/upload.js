@@ -37,7 +37,7 @@ const uploadPost = [
       if (error) {
         if (error instanceof multer.MulterError) {
           req.flash("error", error.message + " max file size is 5 MB");
-          return res.redirect("/folder");
+          return res.redirect(`/folder/${res.locals.folder.id}`);
         } else {
           throw error;
         }
@@ -54,11 +54,10 @@ const uploadPost = [
 
       if (newFile) {
         req.flash("success", "File uploaded succesfuly");
-        res.redirect("/upload");
       } else {
         req.flash("error", "Error uploading file");
-        res.redirect("/upload");
       }
+      res.redirect(`/folder/${res.locals.folder.id}`);
     });
   },
 ];
