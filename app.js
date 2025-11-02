@@ -60,6 +60,15 @@ app.use("/sign-up", signUpRouter);
 app.use("/log-in", logInRouter);
 app.use("/upload", uploadRouter);
 app.use("/folder", folderRouter);
+app.use("/log-out", (req, res) => {
+  req.logOut((error) => {
+    if (error) {
+      console.error(error);
+      throw error;
+    }
+    res.redirect("/");
+  });
+});
 app.use("/", (req, res) => {
   res.render("index.ejs");
 });
