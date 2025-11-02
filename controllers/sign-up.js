@@ -1,6 +1,7 @@
 const userDB = require("../db/user");
 const { body } = require("express-validator");
 const validator = require("./validator");
+const authValidator = require("./auth-validator");
 const bcrypt = require("bcryptjs");
 
 const validateUser = [
@@ -32,11 +33,15 @@ const validateUser = [
     .withMessage("Password and Confirm Password must be equal."),
 ];
 
-function signUpGet(req, res) {
-  res.render("sign-up.ejs", { title: "Sign up" });
-}
+const signUpGet = [
+  authValidator.isNotAuthenticated,
+  function signUpGet(req, res) {
+    res.render("sign-up.ejs", { title: "Sign up" });
+  },
+];
 
 const signUpPost = [
+  authValidator.isNotAuthenticated,
   validateUser,
   validator.checkValidation,
   async function (req, res) {

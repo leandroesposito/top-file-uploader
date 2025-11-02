@@ -1,3 +1,7 @@
+const authValidator = require("./auth-validator");
+const validator = require("./validator");
+const { folderValidator } = require("./folder");
+const { body } = require("express-validator");
 const multer = require("multer");
 const upload = multer({
   dest: "./uploads/",
@@ -7,24 +11,31 @@ const upload = multer({
 }).single("file");
 const fileDB = require("../db/file");
 
-function uploadGet(req, res) {
-  res.render("upload.ejs", { title: "Upload" });
-}
+const uploadGet = [
+  authValidator.isAuthenticated,
+  function uploadGet(req, res) {
+    res.render("upload.ejs", { title: "Upload" });
+  },
+];
 
 const uploadPost = [
-  ,
+  authValidator.isAuthenticated,
+  body("folderId").custom(folderValidator.folderExist),
+  folderValidator.folderBelongsToUser,
+  validator.checkValidation,
   async function (req, res) {
+    if (res.errors) {
+      return res.redirect("/folder");
+    }
     upload(req, res, async function (error) {
       if (error) {
         if (error instanceof multer.MulterError) {
           req.flash("error", error.message + " max file size is 5 MB");
-          return res.redirect("/upload");
+          return res.redirect("/folder");
         } else {
           throw error;
         }
       }
-
-      console.dir(req.file, { colors: true });
 
       const file = {
         originalname: req.file.originalname,
