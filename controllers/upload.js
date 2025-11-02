@@ -1,7 +1,7 @@
 const authValidator = require("./auth-validator");
 const validator = require("./validator");
 const { folderValidator } = require("./folder");
-const { body } = require("express-validator");
+const { param } = require("express-validator");
 const multer = require("multer");
 const upload = multer({
   dest: "./uploads/",
@@ -20,13 +20,14 @@ const uploadGet = [
 
 const uploadPost = [
   authValidator.isAuthenticated,
-  body("folderId").custom(folderValidator.folderExist),
+  param("folderId").custom(folderValidator.folderExist),
   folderValidator.folderBelongsToUser,
   validator.checkValidation,
   async function (req, res) {
     if (res.errors) {
       return res.redirect("/folder");
     }
+    res.locals.folder = req.locals.folder;
     upload(req, res, async function (error) {
       if (!req.file) {
         req.flash("error", "You must select a file to upload");
@@ -46,7 +47,7 @@ const uploadPost = [
         originalname: req.file.originalname,
         filename: req.file.filename,
         size: req.file.size,
-        folderId: req.body.folderId || null,
+        folderId: res.locals.folder.id || null,
       };
 
       const newFile = await fileDB.createFile(file, req.user.id);
