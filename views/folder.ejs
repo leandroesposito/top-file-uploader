@@ -1,4 +1,33 @@
 <%- include('./partials/upper-body.ejs') %>
-<%- include('./partials/folder-form.ejs') %>
-<%- include('./partials/upload-form.ejs') %>
+<div class="path">
+  <div class="path-item">
+    <a href="/folder">/</a>
+  </div>
+  <% path.forEach(pathItem => { %>
+   <div class="path-item">
+    <a href="/folder/<%- pathItem.id %>">
+      <%= pathItem.name %>
+    </a>
+   </div>
+  <% }) %>
+</div>
+<div class="folder">
+  <%- include('./partials/folder-form.ejs') %>
+  <%- include('./partials/upload-form.ejs') %>
+  <% folder.children.forEach(subfolder => { %>
+    <div class="subfolder">
+      <a href="/folder/<%- subfolder.id %>">
+        <%= subfolder.name %>
+      </a>
+    </div>
+  <% }) %>
+  <% folder.files.forEach(file => { %>
+    <div class="file">
+      <a href="/download/<%- file.id %>">
+        <%= file.originalname %>
+      </a>
+    </div>
+  <% }) %>
+</div>
+
 <%- include('./partials/lower-body.ejs') %>
