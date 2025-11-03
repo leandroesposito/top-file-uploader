@@ -15,7 +15,7 @@ const fileValidator = {
     req.locals = { file };
     return true;
   },
-  fileBelongsToUser: async (req, res, next) => {
+  fileBelongsToUser: (req, res, next) => {
     if (req.locals?.file && req.user.id != req.locals.file.userId) {
       throw new Error("You don't have permission to access this file!");
     }
@@ -28,7 +28,7 @@ const fileGet = [
   authValidator.isAuthenticated,
   fileValidator.fileBelongsToUser,
   validator.checkValidation,
-  async function fileGet(req, res, next) {
+  function fileGet(req, res, next) {
     if (res.locals.errors) {
       return res.redirect("/folder");
     }

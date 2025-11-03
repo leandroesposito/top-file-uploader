@@ -14,7 +14,7 @@ const folderValidator = {
     req.locals = { folder };
     return true;
   },
-  folderBelongsToUser: async (req, res, next) => {
+  folderBelongsToUser: (req, res, next) => {
     if (req.locals?.folder && req.user.id != req.locals.folder.userId) {
       throw new Error("You don't have permission to access this folder!");
     }
