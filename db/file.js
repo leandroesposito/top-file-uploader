@@ -16,6 +16,17 @@ async function createFile(file, userId) {
   return newFile;
 }
 
+async function getFileById(id) {
+  const file = await prisma.file.findUnique({
+    where: {
+      id: id,
+    },
+  });
+
+  return file;
+}
+
 module.exports = {
   createFile,
+  getFileById,
 };

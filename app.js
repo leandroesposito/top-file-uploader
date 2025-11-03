@@ -15,6 +15,7 @@ const signUpRouter = require("./routes/sign-up");
 const logInRouter = require("./routes/log-in");
 const uploadRouter = require("./routes/upload");
 const folderRouter = require("./routes/folder");
+const fileRouter = require("./routes/file");
 
 const app = express();
 
@@ -60,6 +61,7 @@ app.use("/sign-up", signUpRouter);
 app.use("/log-in", logInRouter);
 app.use("/upload", uploadRouter);
 app.use("/folder", folderRouter);
+app.use("/file", fileRouter);
 app.use("/log-out", (req, res) => {
   req.logOut((error) => {
     if (error) {
