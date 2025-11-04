@@ -53,7 +53,7 @@ const fileDeleteGet = [
   validator.checkValidation,
   async function fileDeleteGet(req, res, next) {
     if (res.locals.errors) {
-      res.redirect("/folder");
+      return res.redirect("/folder");
     }
 
     const filePath = path.join(
