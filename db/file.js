@@ -26,7 +26,16 @@ async function getFileById(id) {
   return file;
 }
 
+async function deleteFileById(id) {
+  await prisma.file.delete({
+    where: {
+      id: id,
+    },
+  });
+}
+
 module.exports = {
   createFile,
   getFileById,
+  deleteFileById,
 };

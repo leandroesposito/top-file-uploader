@@ -3,6 +3,7 @@ const fileDB = require("../db/file");
 const validator = require("./validator");
 const authValidator = require("./auth-validator");
 const path = require("node:path");
+const fs = require("node:fs");
 
 const fileValidator = {
   fileExist: async (value, { req }) => {
@@ -45,6 +46,35 @@ const fileGet = [
   },
 ];
 
+const fileDeleteGet = [
+  param("id").custom(fileValidator.fileExist),
+  authValidator.isAuthenticated,
+  fileValidator.fileBelongsToUser,
+  validator.checkValidation,
+  async function fileDeleteGet(req, res, next) {
+    if (res.locals.errors) {
+      res.redirect("/folder");
+    }
+
+    const filePath = path.join(
+      __dirname,
+      "../uploads",
+      req.locals.file.filename
+    );
+
+    fs.unlink(filePath, async (error) => {
+      if (error) {
+        return next(error);
+      }
+
+      await fileDB.deleteFileById(req.locals.file.id);
+      req.flash("success", "File delete successfuly");
+      res.redirect("/folder");
+    });
+  },
+];
+
 module.exports = {
   fileGet,
+  fileDeleteGet,
 };
