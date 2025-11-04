@@ -95,8 +95,22 @@ async function getFolderPath(folderId) {
   return path;
 }
 
+async function renameFolderById(id, newName) {
+  const folder = await prisma.folder.update({
+    where: {
+      id: id,
+    },
+    data: {
+      name: newName,
+    },
+  });
+
+  return folder;
+}
+
 module.exports = {
   createFolder,
   getFolderContent,
   getFolderPath,
+  renameFolderById,
 };

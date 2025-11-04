@@ -82,8 +82,46 @@ const folderPost = [
   },
 ];
 
+const folderRenamePost = [
+  authValidator.isAuthenticated,
+  param("id").custom(folderValidator.folderExist),
+  body("newName")
+    .trim()
+    .isLength({ min: 4, max: 100 })
+    .withMessage("Folder name must be between 4 and 100 characters!")
+    .custom(async (value, { req }) => {
+      const parent = await folderDB.getFolderContent(
+        req.locals.folder.parentId
+      );
+      const folder = parent.children.find((child) => child.name === value);
+      if (folder) {
+        throw new Error("You already have a folder with that name!");
+      }
+      return true;
+    }),
+  folderValidator.folderBelongsToUser,
+  validator.checkValidation,
+  async function folderRenamePost(req, res) {
+    if (res.locals.errors) {
+      return res.redirect("/folder");
+    }
+
+    const folderId = req.locals.folder.id;
+    const newName = req.body.newName;
+    const folder = await folderDB.renameFolderById(folderId, newName);
+
+    if (folder.name === newName) {
+      req.flash("success", "Folder renamed successfuly!");
+    } else {
+      req.flash("error", "Error renaming folder!");
+    }
+    res.redirect("/folder");
+  },
+];
+
 module.exports = {
   folderGet,
   folderPost,
   folderValidator,
+  folderRenamePost,
 };

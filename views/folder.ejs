@@ -11,6 +11,15 @@
    </div>
   <% }) %>
 </div>
+<% if (path.length > 0) { %>
+  <form action="/folder/<%= folder.id %>/rename" method="POST">
+    <div class="form-row">
+      <label for="newName">New name</label>
+      <input type="text" name="newName" id="newName">
+    </div>
+    <button class="button" type="submit">Rename</button>
+  </form>
+<% } %>
 <div class="folder">
   <%- include('./partials/folder-form.ejs') %>
   <%- include('./partials/upload-form.ejs') %>
@@ -29,6 +38,13 @@
       <a href="/file/<%- file.id %>/delete">
         Delete
       </a>
+      <form action="/file/<%= file.id %>/rename" method="POST">
+        <div class="form-row">
+          <label for="newName">New name</label>
+          <input type="text" name="newName" id="newName">
+        </div>
+        <button class="button" type="submit">Rename</button>
+      </form>
     </div>
   <% }) %>
 </div>

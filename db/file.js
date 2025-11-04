@@ -34,8 +34,22 @@ async function deleteFileById(id) {
   });
 }
 
+async function renameFileById(id, newName) {
+  const file = await prisma.file.update({
+    where: {
+      id: id,
+    },
+    data: {
+      originalname: newName,
+    },
+  });
+
+  return file;
+}
+
 module.exports = {
   createFile,
   getFileById,
   deleteFileById,
+  renameFileById,
 };

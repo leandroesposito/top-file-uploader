@@ -1,5 +1,6 @@
 const { param, body } = require("express-validator");
 const fileDB = require("../db/file");
+const folderDB = require("../db/folder");
 const validator = require("./validator");
 const authValidator = require("./auth-validator");
 const path = require("node:path");
@@ -74,7 +75,43 @@ const fileDeleteGet = [
   },
 ];
 
+const fileRenamePost = [
+  authValidator.isAuthenticated,
+  param("id").custom(fileValidator.fileExist),
+  fileValidator.fileBelongsToUser,
+  body("newName")
+    .trim()
+    .isLength({ min: 4, max: 100 })
+    .withMessage("File name must be between 4 and 100 characters!")
+    .custom(async (value, { req }) => {
+      const parent = await folderDB.getFolderContent(req.locals.file.folderId);
+      const file = parent.files.find((f) => f.originalname === value);
+      if (file) {
+        throw new Error("You already have a file with that name!");
+      }
+      return true;
+    }),
+  validator.checkValidation,
+  async function fileRenamePost(req, res) {
+    if (res.locals.errors) {
+      return res.redirect("/folder");
+    }
+
+    const fileId = req.locals.file.id;
+    const newName = req.body.newName;
+    const file = await fileDB.renameFileById(fileId, newName);
+
+    if (file.originalname === newName) {
+      req.flash("success", "File renamed successfuly!");
+    } else {
+      req.flash("error", "Error renaming file!");
+    }
+    res.redirect("/folder");
+  },
+];
+
 module.exports = {
   fileGet,
   fileDeleteGet,
+  fileRenamePost,
 };
