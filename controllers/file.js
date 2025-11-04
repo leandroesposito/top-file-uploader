@@ -32,11 +32,10 @@ const fileGet = [
     if (res.locals.errors) {
       return res.redirect("/folder");
     }
-    res.locals.file = req.locals.file;
 
     return res.download(
-      path.join("./uploads", res.locals.file.filename),
-      res.locals.file.originalname,
+      path.join("./uploads", req.locals.file.filename),
+      req.locals.file.originalname,
       (error) => {
         if (error) {
           next(error);
