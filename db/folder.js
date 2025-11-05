@@ -50,6 +50,20 @@ async function getFolderContent(folderId, userId) {
   };
 }
 
+async function getFilesRecursive(folderId) {
+  const queue = [folderId];
+  const files = [];
+
+  while (queue.length > 0) {
+    const currentId = queue.shift();
+    const folder = await getFolderContent(currentId);
+    folder.files.forEach((file) => files.push(file));
+    folder.children.forEach((subfolder) => queue.push(subfolder.id));
+  }
+
+  return files;
+}
+
 async function getRootContent(userId) {
   const children = await prisma.folder.findMany({
     where: {
@@ -108,9 +122,24 @@ async function renameFolderById(id, newName) {
   return folder;
 }
 
+async function deleteFolderById(id) {
+  const folder = await prisma.folder.delete({
+    where: {
+      id: id,
+    },
+    include: {
+      files: true,
+    },
+  });
+
+  return folder;
+}
+
 module.exports = {
   createFolder,
   getFolderContent,
   getFolderPath,
   renameFolderById,
+  deleteFolderById,
+  getFilesRecursive,
 };

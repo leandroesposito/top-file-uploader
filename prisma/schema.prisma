@@ -34,16 +34,16 @@ model File {
   originalname String
   filename     String
   size         Int
-  user         User    @relation(fields: [userId], references: [id])
+  user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String
-  folder       Folder? @relation(fields: [folderId], references: [id])
+  folder       Folder? @relation(fields: [folderId], references: [id], onDelete: Cascade)
   folderId     String?
 }
 
 model Folder {
   id       String   @id @default(uuid())
   name     String
-  parent   Folder?  @relation("folderTree", fields: [parentId], references: [id])
+  parent   Folder?  @relation("folderTree", fields: [parentId], references: [id], onDelete: Cascade)
   parentId String?
   children Folder[] @relation("folderTree")
   files    File[]

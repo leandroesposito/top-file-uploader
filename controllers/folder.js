@@ -2,6 +2,8 @@ const { param, body } = require("express-validator");
 const folderDB = require("../db/folder");
 const validator = require("./validator");
 const authValidator = require("./auth-validator");
+const fs = require("node:fs");
+const path = require("node:path");
 
 const folderValidator = {
   folderExist: async (value, { req }) => {
@@ -119,9 +121,43 @@ const folderRenamePost = [
   },
 ];
 
+const folderDeleteGet = [
+  authValidator.isAuthenticated,
+  param("id", folderValidator.folderExist),
+  folderValidator.folderBelongsToUser,
+  validator.checkValidation,
+  async function folderDeleteGet(req, res) {
+    if (res.locals.errors) {
+      return res.redirect("/folder");
+    }
+
+    const folderId = req.params.id;
+    const files = await folderDB.getFilesRecursive(folderId);
+
+    files.forEach((file) => {
+      const filePath = path.join(__dirname, "../uploads", file.filename);
+      fs.unlink(filePath, (error) => {
+        if (error) {
+          console.error(error);
+          throw error;
+        }
+      });
+    });
+
+    const folder = await folderDB.deleteFolderById(folderId);
+    if (folder) {
+      req.flash("success", "Folder deleted succesfuly");
+    } else {
+      req.flash("error", "Error deleting folder");
+    }
+    res.redirect("/folder");
+  },
+];
+
 module.exports = {
   folderGet,
   folderPost,
   folderValidator,
   folderRenamePost,
+  folderDeleteGet,
 };

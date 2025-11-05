@@ -19,13 +19,16 @@
     </div>
     <button class="button" type="submit">Rename</button>
   </form>
+  <a href="/folder/<%= folder.id %>/delete">
+    F Delete
+  </a>
 <% } %>
 <div class="folder">
   <%- include('./partials/folder-form.ejs') %>
   <%- include('./partials/upload-form.ejs') %>
   <% folder.children.forEach(subfolder => { %>
     <div class="subfolder">
-      <a href="/folder/<%- subfolder.id %>">
+      F <a href="/folder/<%- subfolder.id %>">
         <%= subfolder.name %>
       </a>
     </div>
