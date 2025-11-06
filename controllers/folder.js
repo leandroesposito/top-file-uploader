@@ -2,8 +2,11 @@ const { param, body } = require("express-validator");
 const folderDB = require("../db/folder");
 const validator = require("./validator");
 const authValidator = require("./auth-validator");
-const fs = require("node:fs");
-const path = require("node:path");
+const { createClient } = require("@supabase/supabase-js");
+const supabase = createClient(
+  process.env.SUPABASEURL,
+  process.env.SUPABASEAPIKEY
+);
 
 const folderValidator = {
   folderExist: async (value, { req }) => {
@@ -134,23 +137,26 @@ const folderDeleteGet = [
     const folderId = req.params.id;
     const files = await folderDB.getFilesRecursive(folderId);
 
-    files.forEach((file) => {
-      const filePath = path.join(__dirname, "../uploads", file.filename);
-      fs.unlink(filePath, (error) => {
-        if (error) {
-          console.error(error);
-          throw error;
-        }
-      });
-    });
+    if (files.length > 0) {
+      const { data, error } = await supabase.storage
+        .from("uploads")
+        .remove(files.map((f) => f.path));
+
+      if (error) {
+        console.error(error);
+        req.flash("error", error.message);
+        return res.redirect("/folder");
+      }
+    }
 
     const folder = await folderDB.deleteFolderById(folderId);
     if (folder) {
       req.flash("success", "Folder deleted succesfuly");
+      res.redirect(`/folder/${folder.parentId || ""}`);
     } else {
       req.flash("error", "Error deleting folder");
+      res.redirect("/folder");
     }
-    res.redirect("/folder");
   },
 ];
 
