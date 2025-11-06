@@ -51,13 +51,15 @@ const uploadPost = [
         }
       }
 
+      const filePath = `${res.locals.folder.userId}/${res.locals.folder.id}/${req.file.originalname}`;
+
       const file = {
         name: req.file.originalname,
         size: req.file.size,
         folderId: res.locals.folder.id || null,
         buffer: req.file.buffer,
-        path: `${res.locals.folder.userId}/${res.locals.folder.id}/${file.name}`,
-        url: `${process.env.SUPABASEURL}/storage/v1/object/public/uploads/${file.path}`,
+        path: filePath,
+        url: `${process.env.SUPABASEURL}/storage/v1/object/public/uploads/${filePath}`,
       };
 
       if (res.locals.folder.files.find((f) => f.name === file.name)) {
