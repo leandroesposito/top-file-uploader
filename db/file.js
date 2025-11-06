@@ -10,6 +10,7 @@ async function createFile(file, userId) {
       userId: userId,
       folderId: file.folderId,
       url: file.url,
+      path: file.path,
     },
   });
 
@@ -34,13 +35,15 @@ async function deleteFileById(id) {
   });
 }
 
-async function renameFileById(id, newName) {
+async function renameFileById(id, newName, newPath, newUrl) {
   const file = await prisma.file.update({
     where: {
       id: id,
     },
     data: {
       name: newName,
+      path: newPath,
+      url: newUrl,
     },
   });
 

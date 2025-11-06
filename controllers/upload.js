@@ -56,6 +56,8 @@ const uploadPost = [
         size: req.file.size,
         folderId: res.locals.folder.id || null,
         buffer: req.file.buffer,
+        path: `${res.locals.folder.userId}/${res.locals.folder.id}/${file.name}`,
+        url: `${process.env.SUPABASEURL}/storage/v1/object/public/uploads/${file.path}`,
       };
 
       if (res.locals.folder.files.find((f) => f.name === file.name)) {
@@ -69,23 +71,18 @@ const uploadPost = [
 
       const { data, error } = await supabase.storage
         .from("uploads")
-        .upload(
-          `/${res.locals.folder.userId}/${res.locals.folder.id}/${file.name}`,
-          file.buffer,
-          {
-            cacheControl: "3600",
-            upsert: false,
-          }
-        );
-
-      file.url = `${process.env.SUPABASEURL}/storage/v1/object/public/${data.fullPath}`;
-
-      const newFile = await fileDB.createFile(file, req.user.id);
+        .upload(file.path, file.buffer, {
+          cacheControl: "3600",
+          upsert: false,
+        });
 
       if (error) {
+        console.error(error);
         req.flash("error", error.message);
         return res.redirext("/folder");
       }
+
+      const newFile = await fileDB.createFile(file, req.user.id);
 
       if (newFile) {
         req.flash("success", "File uploaded succesfuly");

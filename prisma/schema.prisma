@@ -38,6 +38,7 @@ model File {
   folder   Folder? @relation(fields: [folderId], references: [id], onDelete: Cascade)
   folderId String?
   url      String
+  path     String
 }
 
 model Folder {
