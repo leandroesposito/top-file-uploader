@@ -26,7 +26,7 @@ async function getFolderContent(folderId, userId) {
     include: {
       files: {
         orderBy: {
-          filename: "asc",
+          name: "asc",
         },
       },
       children: {

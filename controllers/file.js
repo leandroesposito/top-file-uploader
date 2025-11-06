@@ -35,15 +35,7 @@ const fileGet = [
       return res.redirect("/folder");
     }
 
-    return res.download(
-      path.join("./uploads", req.locals.file.filename),
-      req.locals.file.originalname,
-      (error) => {
-        if (error) {
-          next(error);
-        }
-      }
-    );
+    return res.redirect(req.locals.file.url);
   },
 ];
 

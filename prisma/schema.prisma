@@ -30,14 +30,14 @@ model User {
 }
 
 model File {
-  id           String  @id @default(uuid())
-  originalname String
-  filename     String
-  size         Int
-  user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId       String
-  folder       Folder? @relation(fields: [folderId], references: [id], onDelete: Cascade)
-  folderId     String?
+  id       String  @id @default(uuid())
+  name     String
+  size     Int
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   String
+  folder   Folder? @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  folderId String?
+  url      String
 }
 
 model Folder {

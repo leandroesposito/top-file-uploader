@@ -5,11 +5,11 @@ const prisma = new PrismaClient();
 async function createFile(file, userId) {
   const newFile = await prisma.file.create({
     data: {
-      originalname: file.originalname,
-      filename: file.filename,
+      name: file.name,
       size: file.size,
       userId: userId,
       folderId: file.folderId,
+      url: file.url,
     },
   });
 
@@ -40,7 +40,7 @@ async function renameFileById(id, newName) {
       id: id,
     },
     data: {
-      originalname: newName,
+      name: newName,
     },
   });
 
