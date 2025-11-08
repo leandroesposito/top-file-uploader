@@ -1,10 +1,15 @@
-<form action="/upload/<%= folder.id %>" method="POST" enctype="multipart/form-data" class="file-form">
-  <div class="form-row">
-    <label for="file">File</label>
-    <input type="file" name="file" id="file" required>
-  </div>
-  <button class="button" type="submit">Submit</button>
-</form>
+<div class="hidden-form-container">
+  <button class="button reveal-form">
+    + Upload File
+  </button>
+  <form action="/upload/<%= folder.id %>" method="POST" enctype="multipart/form-data" class="file-form hidden-form hidden">
+    <div class="form-row">
+      <label for="file">File</label>
+      <input type="file" name="file" id="file" required>
+    </div>
+    <button class="button submit" type="submit">Submit</button>
+  </form>
+</div>
 <script>
   const fileForm = document.querySelector(".file-form");
   const MAX_FILE_MB = 5

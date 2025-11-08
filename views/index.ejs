@@ -1,4 +1,13 @@
 <%- include('./partials/upper-body.ejs') %>
-<%= locals.currentUser?.username %>
-<a href="/folder">/</a>
+<div class="welcome">
+  <p>
+    Welcome to my file uploader project
+  </p>
+  <p>
+    Start <a href="/sign-up">creating an account</a> or <a href="/log-in">log in</a> if you already have one.
+  </p>
+</div>
+<% if (locals.currentUser) { %>
+  <a class="button" href="/folder">View Your Files</a>
+<% } %>
 <%- include('./partials/lower-body.ejs') %>

@@ -1,0 +1,19 @@
+<% if (path.length > 0) { %>
+  <div class="folder-buttons">
+    <div class="hidden-form-container">
+      <button class="reveal-form">
+        Rename Folder
+      </button>
+      <form action="/folder/<%= folder.id %>/rename" method="POST" class="hidden-form hidden">
+        <div class="form-row">
+          <label for="newName">New name</label>
+          <input type="text" name="newName" id="newName">
+        </div>
+        <button class="button submit" type="submit">Rename Folder</button>
+      </form>
+    </div>
+    <a class="button" href="/folder/<%= folder.id %>/delete" onclick="return confirm('Are you sure you want to DELETE this folder? This will delete all subfolders and files inside!!!!!!!')">
+      Delete Folder
+    </a>
+  </div>
+<% } %>

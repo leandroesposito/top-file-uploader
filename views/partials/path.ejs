@@ -1,0 +1,12 @@
+<div class="path">
+  <div class="path-item">
+    <a href="/folder">/ ></a>
+  </div>
+  <% path.forEach(pathItem => { %>
+   <div class="path-item">
+    <a href="/folder/<%- pathItem.id %>">
+      <%= pathItem.name %> >
+    </a>
+   </div>
+  <% }) %>
+</div>

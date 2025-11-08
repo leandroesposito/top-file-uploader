@@ -1,8 +1,13 @@
-<form action="/folder" method="POST">
-  <div class="form-row">
-    <label for="name">Name</label>
-    <input type="text" name="name" id="name" required>
-  </div>
-  <input type="hidden" name="parentId" value="<%= locals.folder ? locals.folder.id : "" %>">
-  <button class="button" type="submit">Submit</button>
-</form>
+<div class="hidden-form-container">
+  <button class="button reveal-form">
+    + New Folder
+  </button>
+  <form action="/folder" method="POST" class="hidden-form hidden">
+    <div class="form-row">
+      <label for="name">Name</label>
+      <input type="text" name="name" id="name" required>
+    </div>
+    <input type="hidden" name="parentId" value="<%= locals.folder ? locals.folder.id : "" %>">
+    <button class="button submit" type="submit">Submit</button>
+  </form>
+</div>

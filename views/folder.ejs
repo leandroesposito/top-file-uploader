@@ -1,55 +1,60 @@
 <%- include('./partials/upper-body.ejs') %>
-<div class="path">
-  <div class="path-item">
-    <a href="/folder">/</a>
-  </div>
-  <% path.forEach(pathItem => { %>
-   <div class="path-item">
-    <a href="/folder/<%- pathItem.id %>">
-      <%= pathItem.name %>
-    </a>
-   </div>
-  <% }) %>
-</div>
-<% if (path.length > 0) { %>
-  <form action="/folder/<%= folder.id %>/rename" method="POST">
-    <div class="form-row">
-      <label for="newName">New name</label>
-      <input type="text" name="newName" id="newName">
-    </div>
-    <button class="button" type="submit">Rename</button>
-  </form>
-  <a href="/folder/<%= folder.id %>/delete">
-    F Delete
-  </a>
-<% } %>
+<%- include('./partials/folder-buttons.ejs') %>
+<%- include('./partials/path.ejs') %>
 <div class="folder">
   <%- include('./partials/folder-form.ejs') %>
   <%- include('./partials/upload-form.ejs') %>
   <% folder.children.forEach(subfolder => { %>
-    <div class="subfolder">
-      F <a href="/folder/<%- subfolder.id %>">
-        <%= subfolder.name %>
-      </a>
-    </div>
+    <a class="folder-item subfolder" href="/folder/<%- subfolder.id %>">
+        /<%= subfolder.name %>
+    </a>
   <% }) %>
   <% folder.files.forEach(file => { %>
-    <div class="file">
-      <a href="/file/<%- file.id %>">
-        <%= file.name %>
+    <div class="folder-item file">
+      <div class="file-data">
+        <div class="file-name">
+          <%= file.name %>
+        </div>
+        <div class="file-size">
+          <%= `${file.size} ${file.size > 1 ? "bytes" : "byte"}` %>
+        </div>
+      </div>
+      <a class="button" href="/file/<%- file.id %>">
+        Download
       </a>
-      <a href="/file/<%- file.id %>/delete">
+      <%- include('./partials/rename-file-form.ejs', { file }) %>
+      <a
+        class="button"
+        href="/file/<%- file.id %>/delete"
+        onclick="return confirm(`Are you sure you want to DELETE this file?`)"
+      >
         Delete
       </a>
-      <form action="/file/<%= file.id %>/rename" method="POST">
-        <div class="form-row">
-          <label for="newName">New name</label>
-          <input type="text" name="newName" id="newName">
-        </div>
-        <button class="button" type="submit">Rename</button>
-      </form>
     </div>
   <% }) %>
 </div>
+<script>
+  document.body.addEventListener("click", (event) => {
+    const target = event.target;
 
+    if (target.classList.contains("reveal-form")){
+      const hiddenFormContainer = target.closest(".hidden-form-container");
+      const hiddenForm = hiddenFormContainer.querySelector(".hidden-form");
+      const input = hiddenForm.querySelector("input");
+      hiddenForm.classList.toggle("hidden");
+      target.classList.toggle("hidden");
+      input.focus();
+
+      hiddenForm.addEventListener("focusout", function onFocusOut(e) {
+        setTimeout(() => {
+          if (!hiddenFormContainer.contains(document.activeElement)){
+            hiddenForm.classList.toggle("hidden");
+            target.classList.toggle("hidden");
+            hiddenForm.removeEventListener("focusout", onFocusOut);
+          }
+        }, 10)
+      });
+    }
+  });
+</script>
 <%- include('./partials/lower-body.ejs') %>

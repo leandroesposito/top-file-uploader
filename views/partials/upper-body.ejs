@@ -4,8 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title> <%= locals.title || "TOP File Uploader" %> </title>
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <%- include('./auth-buttons.ejs') %>
-  <h1><%= locals.title || "TOP File Uploader" %></h1>
-  <%- include('./messages.ejs') %>
+  <header>
+    <div class="title">
+      <a href="/">
+        <h1>
+          TOP File Uploader
+        </h1>
+      </a>
+    </div>
+    <div class="buttons">
+      <%- include('./auth-buttons.ejs') %>
+    </div>
+    <%- include('./current-user.ejs') %>
+  </header>
+  <div class="body">
+    <div class="page-title">
+      <h2>
+        <%= locals.title ? title : "TOP File Uploader" %>
+      </h2>
+    </div>
+    <%- include('./messages.ejs') %>
+    <main>
