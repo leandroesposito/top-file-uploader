@@ -76,6 +76,12 @@ app.use("/", (req, res) => {
   res.render("index.ejs");
 });
 
+app.use((error, req, res, next) => {
+  console.error(error);
+  res.status(500);
+  res.render("500.ejs", { title: "500", serverError: error.message });
+});
+
 app.listen(PORT, (error) => {
   if (error) {
     console.error(error);
