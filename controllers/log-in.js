@@ -11,7 +11,7 @@ const logInGet = [
 const logInPost = [
   authValidator.isNotAuthenticated,
   passport.authenticate("local", {
-    successRedirect: "/",
+    successRedirect: "/folder",
     successFlash: "Welcome",
     failureRedirect: "/log-in",
     failureFlash: true,

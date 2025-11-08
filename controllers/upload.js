@@ -62,11 +62,11 @@ const uploadPost = [
 
       if (res.locals.folder.files.find((f) => f.name === file.name)) {
         req.flash("error", "You already have a file with that name!");
-        return res.redirect("/folder");
+        return res.redirect(`/folder/${res.locals.folder.id}`);
       }
       if (file.name.length < 4 || file.name.length > 100) {
         req.flash("error", "File name must be between 4 and 100 characters!");
-        return res.redirect("/folder");
+        return res.redirect(`/folder/${res.locals.folder.id}`);
       }
 
       const { data, error } = await supabase.storage
@@ -82,7 +82,7 @@ const uploadPost = [
       if (error) {
         console.error(error);
         req.flash("error", error.message);
-        return res.redirect("/folder");
+        return res.redirect(`/folder/${res.locals.folder.id}`);
       }
 
       const newFile = await fileDB.createFile(file, req.user.id);

@@ -117,10 +117,11 @@ const folderRenamePost = [
 
     if (folder.name === newName) {
       req.flash("success", "Folder renamed successfuly!");
+      res.redirect(`/folder/${folder.id}`);
     } else {
       req.flash("error", "Error renaming folder!");
+      res.redirect("/folder");
     }
-    res.redirect("/folder");
   },
 ];
 

@@ -58,7 +58,8 @@ const signUpPost = [
 
     const newUser = await userDB.createUser(user);
     if (newUser) {
-      req.flash("success", "User created successfuly"), res.redirect("/log-in");
+      req.flash("success", "User created successfuly");
+      res.redirect("/log-in");
     } else {
       req.flash("error", "Error creating user");
       res.redirect("/sign-up");
